@@ -8,7 +8,6 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -29,9 +28,8 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Public Fields
 
-		public static GameManager Instance;
-		[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
-		public static GameObject LocalPlayerInstance;
+		static public GameManager Instance;
+
 		#endregion
 
 		#region Private Fields
@@ -49,19 +47,6 @@ namespace Photon.Pun.Demo.PunBasics
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
-        private void Awake()
-        {
-	        // #Important
-// used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
-	        if (photonView.IsMine)
-	        {
-		        PlayerManager.LocalPlayerInstance = this.gameObject;
-	        }
-// #Critical
-// we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
-	        DontDestroyOnLoad(this.gameObject);
-        }
-
         void Start()
 		{
 			Instance = this;
@@ -83,12 +68,17 @@ namespace Photon.Pun.Demo.PunBasics
 				if (PlayerManager.LocalPlayerInstance==null)
 				{
 				    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-				    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+
+					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 					PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
 				}else{
+
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
 				}
+
+
 			}
+
 		}
 
 		/// <summary>
