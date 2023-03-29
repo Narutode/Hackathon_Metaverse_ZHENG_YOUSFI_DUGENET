@@ -285,7 +285,7 @@ namespace Photon.Pun.Demo.PunBasics
             movement = transform.worldToLocalMatrix.inverse * movement;
             transform.position = transform.position + movement;
 
-
+            Debug.Log(movement);
             // Camera rotation
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
