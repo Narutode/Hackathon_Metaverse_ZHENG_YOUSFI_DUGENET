@@ -3,53 +3,85 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Tree : MonoBehaviour
+public class TreeScript : MonoBehaviour
 {
-    private bool noLeaves = false;
-    private bool dying = false;
+    public bool noLeaves = false;
+    public bool dying = false;
 
-    private List<GameObject> trees = new List<GameObject>();
-    private List<GameObject> deadTrees = new List<GameObject>();
+    public List<GameObject> trees = new List<GameObject>();
+    public List<GameObject> deadTrees = new List<GameObject>();
 
-    private GameObject prefabDeadTree;
+    public GameObject prefabDeadTree;
 
     public MainScript mainScript;
+
+    private int timer = 50;
 
     // Start is called before the first frame update
     void Start()
     {
-        trees = GetComponentsInChildren<GameObject>().ToList();
+        foreach (var tree in trees)
+        {
+            var pos = tree.transform.position;
+            pos.y = -7.5f;
+            tree.transform.position = pos;
+        }
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        if (!noLeaves)
+        if (timer == 0)
         {
-            if (mainScript.temperature > 42)
-                noLeaves = true;
-        }
-        else if (!dying)
-        {
-            if (mainScript.temperature > 42)
+            if(mainScript.temperature >40)timer = 50;
+            if(mainScript.temperature >42)timer = 25;
+            if(mainScript.temperature >44)timer = 10;
+            if (!noLeaves)
             {
-                dying = true;
+                if (mainScript.temperature > 40f)
+                    noLeaves = true;
+            }
+            else if (!dying)
+            {
+                if (mainScript.temperature > 42.5f)
+                {
+                    dying = true;
+                }
+            }
+            if (noLeaves)
+            {
+                if (trees.Any())
+                {
+                    int randI = Random.Range(0, trees.Count());
+                    GameObject rTree = trees[randI];
+                    var trans = rTree.transform;
+                    var newpos = trans.position;
+                    newpos.y = 7;
+                    trans.position = newpos;
+                    GameObject newDead = Instantiate(prefabDeadTree, trans.position, prefabDeadTree.transform.rotation, transform);
+                    deadTrees.Add(newDead);
+                    trees.Remove(rTree);
+                    Destroy(rTree);
+                }
+            }
+            if (dying)
+            {
+                if (deadTrees.Any())
+                {
+                    if (Random.Range(0, 1) > 0.5)
+                    {
+                        int randI = Random.Range(0, deadTrees.Count());
+                        GameObject rTree = deadTrees[randI];
+                        deadTrees.Remove(rTree);
+                        Destroy(rTree);
+                    }
+
+                }
             }
         }
-
-        if (dying)
+        else
         {
-            
+            timer--;
         }
-        else if (noLeaves)
-        {
-            
-        }
-        /*
-        float temp = mainScript.temperature;
-        float riverHeight = (temp - 15) * (500) / (15 - 40);
-        Vector3 newPos = RiverGameObject.transform.position;
-        newPos.y = riverHeight;
-        RiverGameObject.transform.position = newPos;*/
     }
 }
