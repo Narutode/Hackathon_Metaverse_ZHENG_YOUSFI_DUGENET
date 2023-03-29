@@ -29,6 +29,12 @@ namespace Photon.Pun.Demo.PunBasics
         [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
         public static GameObject LocalPlayerInstance;
 
+        public float mouseSensitivity = 2f;
+        public float speed = 10.0f;
+
+        private float offsetX = 0f;
+        private float offsetY = 0f;
+        
         #endregion
 
         #region Private Fields
@@ -39,7 +45,7 @@ namespace Photon.Pun.Demo.PunBasics
 
         [Tooltip("The Beams GameObject to control")]
         [SerializeField]
-        private GameObject beams;
+        //private GameObject beams;
 
         //True, when the user is firing
         bool IsFiring;
@@ -53,6 +59,7 @@ namespace Photon.Pun.Demo.PunBasics
         /// </summary>
         public void Awake()
         {
+            /*
             if (this.beams == null)
             {
                 Debug.LogError("<Color=Red><b>Missing</b></Color> Beams Reference.", this);
@@ -60,7 +67,7 @@ namespace Photon.Pun.Demo.PunBasics
             else
             {
                 this.beams.SetActive(false);
-            }
+            }*/
 
             // #Important
             // used in GameManager.cs: we keep track of the localPlayer instance to prevent instanciation when levels are synchronized
@@ -141,11 +148,11 @@ namespace Photon.Pun.Demo.PunBasics
                     this.leavingRoom = GameManager.Instance.LeaveRoom();
                 }
             }
-
+/*
             if (this.beams != null && this.IsFiring != this.beams.activeInHierarchy)
             {
                 this.beams.SetActive(this.IsFiring);
-            }
+            }*/
         }
 
         public override void OnLeftRoom()
@@ -246,6 +253,7 @@ namespace Photon.Pun.Demo.PunBasics
         /// </summary>
         void ProcessInputs()
         {
+            /*
             if (Input.GetButtonDown("Fire1"))
             {
                 // we don't want to fire when we interact with UI buttons for example. IsPointerOverGameObject really means IsPointerOver*UI*GameObject
@@ -268,6 +276,25 @@ namespace Photon.Pun.Demo.PunBasics
                     this.IsFiring = false;
                 }
             }
+            */
+            // Camera translation
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+            Vector3 movement = new Vector3(horizontal, 0f, vertical);
+            movement = movement.normalized * speed * Time.deltaTime;
+            movement = transform.worldToLocalMatrix.inverse * movement;
+            transform.position = transform.position + movement;
+
+
+            // Camera rotation
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            offsetX += mouseX * mouseSensitivity;
+            offsetY += mouseY * mouseSensitivity;
+
+            Quaternion rotation = Quaternion.Euler(-offsetY, offsetX, 0f);
+            transform.rotation = rotation;
         }
 
         #endregion
