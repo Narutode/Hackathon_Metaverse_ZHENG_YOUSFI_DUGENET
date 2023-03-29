@@ -30,7 +30,7 @@ public class LightScript : MonoBehaviour
             // Animation de la couleur de la lumière
             directionalLight.DOColor(endColor, colorChangeDuration);
 
-        directionalLight.DOIntensity(intensity * 2f, colorChangeDuration);
+            directionalLight.DOIntensity(intensity * 2f, colorChangeDuration);
 
         }
     }
