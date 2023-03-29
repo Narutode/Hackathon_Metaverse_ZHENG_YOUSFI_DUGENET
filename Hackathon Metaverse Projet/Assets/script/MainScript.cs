@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class MainScipt : MonoBehaviour
+public class MainScript : MonoBehaviour
 {
     public TextMeshProUGUI TextTemperature;
-    private int temperature;
+    public float temperature;
     private Color32 redColor = new Color32(255, 0, 0, 255); // couleur rouge
     Color32 orangeColor = new Color32(255, 165, 0, 255);
     // Start is called before the first frame update
@@ -31,7 +31,7 @@ public class MainScipt : MonoBehaviour
 
     private void FixedUpdate()
     {
-        temperature++;
+        temperature+=.1f;
         TextTemperature.text = temperature.ToString(); 
     }
 }
