@@ -7,13 +7,19 @@ using UnityEngine;
 public class MainScript : MonoBehaviour
 {
     public TextMeshProUGUI TextTemperature;
+    public TextMeshProUGUI TextAnnée;
     public float temperature;
+    public int année;
     private Color32 redColor = new Color32(255, 0, 0, 255); // couleur rouge
     Color32 orangeColor = new Color32(255, 165, 0, 255);
+
+    public float tempMin = 38;
+    public float tempMax = 60;
     // Start is called before the first frame update
     void Start()
     {
-        temperature = 15;
+        temperature = tempMin;
+        année = 2020;
     }
 
     // Update is called once per frame
@@ -23,7 +29,7 @@ public class MainScript : MonoBehaviour
         {
             TextTemperature.color = orangeColor; // changer la couleur du texte à orange
         }
-        if (temperature > 60)
+        if (temperature > 45)
         {
             TextTemperature.color = redColor; // changer la couleur du texte à rouge
         }
@@ -31,7 +37,9 @@ public class MainScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        temperature+=.1f;
-        TextTemperature.text = temperature.ToString(); 
+        temperature+=.018f;
+        année+=10;
+        TextTemperature.text = "Temperature : " + temperature.ToString("0.000") + " °C";
+        TextAnnée.text = "Année : " + année.ToString();
     }
 }

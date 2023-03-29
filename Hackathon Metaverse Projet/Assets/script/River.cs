@@ -11,7 +11,7 @@ public class River : MonoBehaviour
     void Update()
     {
         float temp = mainScript.temperature;
-        float riverHeight = (temp - 15) * (500) / (15 - 40);
+        float riverHeight = (temp - mainScript.tempMin) * (500) / (mainScript.tempMin - mainScript.tempMax);
         Vector3 newPos = RiverGameObject.transform.position;
         newPos.y = riverHeight;
         RiverGameObject.transform.position = newPos;
