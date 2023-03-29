@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Boid : MonoBehaviour
@@ -25,9 +26,9 @@ public class Boid : MonoBehaviour
         this.transform.position += velocity * Time.deltaTime;
         this.transform.rotation = Quaternion.LookRotation(velocity);
 
-        if (Random.Range(0, 1) > 0.2)
+        if (Random.value < 0.001)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         
     }

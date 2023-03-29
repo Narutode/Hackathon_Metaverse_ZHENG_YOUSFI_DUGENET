@@ -68,7 +68,7 @@ public class TreeScript : MonoBehaviour
             {
                 if (deadTrees.Any())
                 {
-                    if (Random.Range(0, 1) > 0.2)
+                    if (Random.value < 0.8)
                     {
                         int randI = Random.Range(0, deadTrees.Count());
                         GameObject rTree = deadTrees[randI];
