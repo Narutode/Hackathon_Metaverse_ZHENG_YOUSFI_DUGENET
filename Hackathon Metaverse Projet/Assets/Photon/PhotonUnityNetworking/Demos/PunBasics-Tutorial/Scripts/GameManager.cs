@@ -29,6 +29,8 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Public Fields
 
+		
+		
 		public static GameManager Instance;
 		[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
 		public static GameObject LocalPlayerInstance;
@@ -61,7 +63,9 @@ namespace Photon.Pun.Demo.PunBasics
 	        {
 		        if (photonView.IsMine)
 		        {
+			        
 			        PlayerManager.LocalPlayerInstance = this.gameObject;
+			        playerPrefab.GetComponent<PlayerManager>().enabled = true;
 		        }
 	        }
 	        
