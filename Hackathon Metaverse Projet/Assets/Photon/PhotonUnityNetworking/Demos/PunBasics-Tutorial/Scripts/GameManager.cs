@@ -65,7 +65,8 @@ namespace Photon.Pun.Demo.PunBasics
 		        {
 			        
 			        PlayerManager.LocalPlayerInstance = this.gameObject;
-			        playerPrefab.GetComponent<PlayerManager>().enabled = true;
+			        
+			       
 		        }
 	        }
 	        
