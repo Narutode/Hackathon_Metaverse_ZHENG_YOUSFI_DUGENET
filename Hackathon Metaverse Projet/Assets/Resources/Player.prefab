@@ -124,7 +124,6 @@ MonoBehaviour:
   Health: 1
   mouseSensitivity: 2
   speed: 10
-  playerUiPrefab: {fileID: 0}
   IsFiring: 0
 --- !u!114 &8941477795604360307
 MonoBehaviour:
