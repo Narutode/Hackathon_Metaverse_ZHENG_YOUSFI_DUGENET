@@ -139,7 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pw: {fileID: 8229219947445157378}
-  mainCam: {fileID: 8229219948138823178}
+  mainCam: {fileID: 8229219948138823177}
   PM: {fileID: 8229219947445157382}
   CW: {fileID: 8229219947445157377}
 --- !u!1 &8229219948138823177

@@ -9,7 +9,7 @@ public class LocalVerif : MonoBehaviour
     [SerializeField] 
     private PhotonView pw;
     [SerializeField] 
-    private Camera mainCam;
+    private GameObject mainCam;
     [SerializeField] 
     private PlayerManager PM;
 
@@ -19,7 +19,7 @@ public class LocalVerif : MonoBehaviour
     {
         if (pw.IsMine)
         {
-            mainCam.enabled = true;
+            mainCam.SetActive(true);
             PM.enabled = true;
             CW.enabled = true;
         }
