@@ -29,6 +29,8 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Public Fields
 
+		
+		
 		public static GameManager Instance;
 		[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
 		public static GameObject LocalPlayerInstance;
@@ -61,7 +63,10 @@ namespace Photon.Pun.Demo.PunBasics
 	        {
 		        if (photonView.IsMine)
 		        {
+			        
 			        PlayerManager.LocalPlayerInstance = this.gameObject;
+			        
+			       
 		        }
 	        }
 	        
@@ -241,7 +246,7 @@ namespace Photon.Pun.Demo.PunBasics
 
 			Debug.LogFormat( "PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount );
 
-			PhotonNetwork.LoadLevel("PunBasics-Room for "+PhotonNetwork.CurrentRoom.PlayerCount);
+			PhotonNetwork.LoadLevel("SampleScene");
 		}
 
 		#endregion
