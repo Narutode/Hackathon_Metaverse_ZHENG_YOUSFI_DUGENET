@@ -8,6 +8,7 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -28,8 +29,10 @@ namespace Photon.Pun.Demo.PunBasics
 
 		#region Public Fields
 
-		static public GameManager Instance;
-
+		public static GameManager Instance;
+		[Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
+		public static GameObject LocalPlayerInstance;
+		
 		#endregion
 
 		#region Private Fields
@@ -47,8 +50,31 @@ namespace Photon.Pun.Demo.PunBasics
         /// <summary>
         /// MonoBehaviour method called on GameObject by Unity during initialization phase.
         /// </summary>
+        private void Awake()
+        {
+	        PhotonNetwork.ConnectUsingSettings();
+
+	        
+	        // #Important
+// used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
+	        if (photonView)
+	        {
+		        if (photonView.IsMine)
+		        {
+			        PlayerManager.LocalPlayerInstance = this.gameObject;
+		        }
+	        }
+	        
+// #Critical
+// we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+	        DontDestroyOnLoad(this.gameObject);
+        }
+
         void Start()
 		{
+			
+			//Connect();
+			
 			Instance = this;
 
 			// in case we started this demo with the wrong scene being active, simply load the menu scene
@@ -68,17 +94,12 @@ namespace Photon.Pun.Demo.PunBasics
 				if (PlayerManager.LocalPlayerInstance==null)
 				{
 				    Debug.LogFormat("We are Instantiating LocalPlayer from {0}", SceneManagerHelper.ActiveSceneName);
-
-					// we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
+				    // we're in a room. spawn a character for the local player. it gets synced by using PhotonNetwork.Instantiate
 					PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
 				}else{
-
 					Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
 				}
-
-
 			}
-
 		}
 
 		/// <summary>
@@ -94,9 +115,65 @@ namespace Photon.Pun.Demo.PunBasics
 		}
 
         #endregion
+        
+        public void Connect()
+        {
+	        // we check if we are connected or not, we join if we are , else we initiate the connection to the server.
+	        if (PhotonNetwork.IsConnected)
+	        {
+		        // #Critical we need at this point to attempt joining a Random Room. If it fails, we'll get notified in OnJoinRandomFailed() and we'll create one.
+		        PhotonNetwork.JoinRandomRoom();
+            
+	        }
+	        else
+	        {
+		        // #Critical, we must first and foremost connect to Photon Online Server.
+		        PhotonNetwork.ConnectUsingSettings();
+		        PhotonNetwork.GameVersion = "0.1";
+	        }
+        }
+        
+        
+        
 
         #region Photon Callbacks
 
+        
+        public override void OnConnectedToMaster()
+        {
+	        Debug.Log("PUN Basics Tutorial/Launcher: OnConnectedToMaster() was called by PUN");
+	        // #Critical: The first we try to do is to join a potential existing room. If there is, good, else, we'll be called back with OnJoinRandomFailed()
+	        PhotonNetwork.JoinRandomRoom();
+        }
+
+        public override void OnJoinRandomFailed(short returnCode, string message)
+        {
+	        Debug.Log("PUN Basics Tutorial/Launcher:OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+
+	        // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
+        
+	        PhotonNetwork.CreateRoom("Test", new RoomOptions());
+
+        
+        }
+
+        public override void OnJoinedRoom()
+        {
+	        Debug.Log("PUN Basics Tutorial/Launcher: OnJoinedRoom() called by PUN. Now this client is in a room.");
+	        //instantiate the player prefab on the network 
+	        PhotonNetwork.Instantiate(this.playerPrefab.name, new Vector3(0f,5f,0f), Quaternion.identity, 0);
+        
+
+        }
+        public override void OnDisconnected(DisconnectCause cause)
+        {
+	        Debug.LogWarningFormat("PUN Basics Tutorial/Launcher: OnDisconnected() was called by PUN with reason {0}",
+		        cause);
+        }
+        
+        
+        
+        
         /// <summary>
         /// Called when a Photon Player got connected. We need to then load a bigger scene.
         /// </summary>
@@ -134,7 +211,7 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 		public override void OnLeftRoom()
 		{
-			SceneManager.LoadScene("PunBasics-Launcher");
+			SceneManager.LoadScene("SampleScene");
 		}
 
 		#endregion

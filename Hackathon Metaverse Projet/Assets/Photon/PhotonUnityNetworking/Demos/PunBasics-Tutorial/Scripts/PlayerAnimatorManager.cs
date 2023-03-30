@@ -18,7 +18,7 @@ namespace Photon.Pun.Demo.PunBasics
 
         [SerializeField]
 	    private float directionDampTime = 0.25f;
-        Animator animator;
+        //Animator animator;
 
 		#endregion
 
@@ -29,7 +29,7 @@ namespace Photon.Pun.Demo.PunBasics
 		/// </summary>
 	    void Start () 
 	    {
-	        animator = GetComponent<Animator>();
+	        //animator = GetComponent<Animator>();
 	    }
 	        
 		/// <summary>
@@ -43,22 +43,22 @@ namespace Photon.Pun.Demo.PunBasics
 	        {
 	            return;
 	        }
-
+/*
 			// failSafe is missing Animator component on GameObject
 	        if (!animator)
 	        {
 				return;
 			}
-
+*/
 			// deal with Jumping
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);			
-
+            //AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);			
+/*
 			// only allow jumping if we are running.
             if (stateInfo.IsName("Base Layer.Run"))
             {
 				// When using trigger parameter
                 if (Input.GetButtonDown("Fire2")) animator.SetTrigger("Jump"); 
-			}
+			*/
            
 			// deal with movement
             float h = Input.GetAxis("Horizontal");
@@ -71,8 +71,8 @@ namespace Photon.Pun.Demo.PunBasics
             }
 
 			// set the Animator Parameters
-            animator.SetFloat( "Speed", h*h+v*v );
-            animator.SetFloat( "Direction", h, directionDampTime, Time.deltaTime );
+            //animator.SetFloat( "Speed", h*h+v*v );
+            //animator.SetFloat( "Direction", h, directionDampTime, Time.deltaTime );
 	    }
 
 		#endregion
